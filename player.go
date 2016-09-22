@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type Player struct{
 	name string
@@ -13,7 +16,7 @@ type Player struct{
 }
 
 func createPlayer(name string)(player *Player){
-	return &Player{name, 1000, 1000, 1000, 1000, true, 0}
+	return &Player{strings.TrimSpace(name), 1000, 1000, 1000, 1000, true, 0}
 
 }
 

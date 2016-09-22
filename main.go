@@ -39,7 +39,8 @@ func clientConns(listener net.Listener) chan net.Conn {
 			i++
 			fmt.Printf("%d: %v <-> %v\n", i, client.LocalAddr(), client.RemoteAddr())
 
-			playerList[client] = createPlayer("TestPlayer")
+			client.Write([]byte("Name?"))
+
 			ch <- client
 		}
 	}()
@@ -50,6 +51,10 @@ func handleConn(client net.Conn) {
 	b := bufio.NewReader(client)
 	for {
 		line, err := b.ReadBytes('\n')
+		if _, ok := playerList[client]; !ok {
+			playerList[client] = createPlayer(string(line))
+		}
+
 		if err != nil { // EOF, or worse
 			break
 		}
