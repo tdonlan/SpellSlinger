@@ -5,12 +5,17 @@ import (
 	"bufio"
 	"strconv"
 	"fmt"
-	"log"
+	//"log"
 )
 
 const PORT = 3540
 
+var playerList map[net.Conn]*Player
+
 func main() {
+
+	playerList = make(map[net.Conn]*Player)
+
 	server, err := net.Listen("tcp", ":" + strconv.Itoa(PORT))
 	if server == nil {
 		panic("couldn't start listening: " + err.Error())
@@ -33,6 +38,8 @@ func clientConns(listener net.Listener) chan net.Conn {
 			}
 			i++
 			fmt.Printf("%d: %v <-> %v\n", i, client.LocalAddr(), client.RemoteAddr())
+
+			playerList[client] = createPlayer("TestPlayer")
 			ch <- client
 		}
 	}()
@@ -46,7 +53,8 @@ func handleConn(client net.Conn) {
 		if err != nil { // EOF, or worse
 			break
 		}
-		log.Print(string(line))
-		client.Write(line)
+		//log.Print(string(line))
+
+		client.Write([]byte( parseMsg(playerList[client], string(line))))
 	}
 }
