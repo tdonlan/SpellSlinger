@@ -11,11 +11,15 @@ import (
 const PORT = 3540
 
 var playerList map[net.Conn]*Player
+
+//combine these?
+var playerNameList map[string]*Player
 var dummyList map[string]*Player
 
 func main() {
 
 	playerList = make(map[net.Conn]*Player)
+	playerNameList = make(map[string]*Player)
 	dummyList = make(map[string]*Player)
 
 	server, err := net.Listen("tcp", ":" + strconv.Itoa(PORT))
@@ -54,14 +58,14 @@ func handleConn(client net.Conn) {
 	for {
 		line, err := b.ReadBytes('\n')
 		if _, ok := playerList[client]; !ok {
-			playerList[client] = createPlayer(string(line))
+			p := createPlayer(string(line))
+			playerList[client] = p
+			playerNameList[p.name] = p
 		}
 
 		if err != nil { // EOF, or worse
 			break
 		}
-		//log.Print(string(line))
-
 		client.Write([]byte( parseMsg(playerList[client], string(line))))
 	}
 }

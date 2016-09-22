@@ -5,6 +5,7 @@ import (
 	"fmt"
 )
 
+
 const Help  = `Welcome to Spell!
 
 Commands:
@@ -24,6 +25,7 @@ Heal (cast heal <target>)
 Dummy (cast dummy <name>)
 
 `
+
 
 func parseMsg(p *Player, msg string)(out string) {
 
@@ -80,7 +82,31 @@ func getWho()(out string){
 }
 
 func castFire(player *Player, target string)(out string){
-	return fmt.Sprintf("%s casts Fire at %s!\n",player.name,target)
+	out = ""
+	//put this somewhere?
+	dmg := 250
+	cost := 100
+
+	//check if target exists
+	if _,ok := dummyList[target]; !ok{
+		out = "Invalid Target!\n"
+		return out
+	}
+
+	//spend mana
+	if !spendMana(player, cost){
+		out = fmt.Sprintf("Not Enough mana! (need %d)", cost)
+	}
+
+	//do damage
+	targetDead := damage(dummyList[target],dmg)
+
+	//check for target death
+	out += fmt.Sprintf("%s casts Fire at %s for %d!\n",player.name,target, dmg)
+	if targetDead{
+		out += fmt.Sprintf("%s was killed by %s!",target,player.name)
+	}
+	return out
 }
 
 func castHeal(player *Player, target string)(out string){
