@@ -11,10 +11,12 @@ import (
 const PORT = 3540
 
 var playerList map[net.Conn]*Player
+var dummyList map[string]*Player
 
 func main() {
 
 	playerList = make(map[net.Conn]*Player)
+	dummyList = make(map[string]*Player)
 
 	server, err := net.Listen("tcp", ":" + strconv.Itoa(PORT))
 	if server == nil {

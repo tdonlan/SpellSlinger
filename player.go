@@ -20,6 +20,10 @@ func createPlayer(name string)(player *Player){
 
 }
 
+func createDummy(name string)(player *Player){
+	return &Player{name, 1000, 1000, 1000, 1000, true, 0}
+}
+
 func getStats(p *Player)(stats string){
 	return fmt.Sprintf("%s -  HP: %d/%d MP: %d/%d Alive: %b", p.name,p.hp,p.totalHp,p.mp,p.totalMp,p.alive)
 }
