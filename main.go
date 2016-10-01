@@ -18,11 +18,17 @@ var dummyList map[string]*Player
 
 func main() {
 
+	fmt.Print("SpellSlinger! \n\nStarting server...\n")
+
 	playerList = make(map[net.Conn]*Player)
 	playerNameList = make(map[string]*Player)
 	dummyList = make(map[string]*Player)
 
+	fmt.Print("Player lists initialized...\n")
+
 	server, err := net.Listen("tcp", ":" + strconv.Itoa(PORT))
+	fmt.Print("Listening for Connections...\n\n")
+
 	if server == nil {
 		panic("couldn't start listening: " + err.Error())
 	}
@@ -58,6 +64,8 @@ func handleConn(client net.Conn) {
 	for {
 		line, err := b.ReadBytes('\n')
 		if _, ok := playerList[client]; !ok {
+			fmt.Printf("%s connected\n", string(line))
+
 			p := createPlayer(string(line))
 			playerList[client] = p
 			playerNameList[p.name] = p

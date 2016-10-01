@@ -33,7 +33,7 @@ func parseMsg(p *Player, msg string)(out string) {
 
 	cmd := strings.TrimSpace(strSplit[0])
 
-	fmt.Print("parsing: " + cmd)
+	fmt.Printf("%s: %s", p.name, msg)
 
 	switch(cmd){
 	case "help":
